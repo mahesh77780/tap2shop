@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tap 2 Shop - 10 Min Delivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-black text-emerald-600 tracking-tight flex items-center gap-1">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> TAP 2 SHOP
+                </h1>
+                <div class="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                    <i class="fa-solid fa-location-dot text-emerald-500"></i>
+                    <span class="font-semibold text-gray-700">Delivery in 9 mins</span> to Home
+                </div>
+            </div>
+            <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 font-bold">
+                P
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP SCREEN CONTAINER -->
+    <main class="max-w-md mx-auto bg-white min-h-[calc(100vh-68px)] pb-24 shadow-inline">
+        
+        <!-- SEARCH -->
+        <div class="p-4 bg-gradient-to-b from-emerald-50 to-white">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400"></i>
+                <input type="text" placeholder="Search 'chips', 'milk' or 'biscuits'..." class="w-full bg-white border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-emerald-500 shadow-sm" />
+            </div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="px-4 py-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Shop by Category</h3>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="filterCategory('all')" id="cat-all" class="cat-btn py-2.5 px-3 rounded-xl bg-emerald-600 text-white font-medium text-xs transition shadow-sm">
+                    ✨ All Items
+                </button>
+                <button onclick="filterCategory('munchies')" id="cat-munchies" class="cat-btn py-2.5 px-3 rounded-xl bg-gray-100 text-gray-600 font-medium text-xs hover:bg-gray-200 transition">
+                    🍿 Munchies
+                </button>
+                <button onclick="filterCategory('dairy')" id="cat-dairy" class="cat-btn py-2.5 px-3 rounded-xl bg-gray-100 text-gray-600 font-medium text-xs hover:bg-gray-200 transition">
+                    🥛 Dairy & Drinks
+                </button>
+            </div>
+        </div>
+
+        <!-- PRODUCT GRID -->
+        <div class="p-4">
+            <h3 class="text-sm font-bold text-gray-800 mb-4" id="grid-title">Fresh Essentials</h3>
+            <div class="grid grid-cols-2 gap-4" id="product-grid">
+                <!-- Products dynamically updated by JavaScript below -->
+            </div>
+        </div>
+    </main>
+
+    <!-- FLOATING BOTTOM CART BAR -->
+    <div id="cart-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] transform translate-y-full transition-transform duration-300 z-40">
+        <div class="max-w-md mx-auto p-4 flex items-center justify-between">
+            <div>
+                <p class="text-xs text-gray-400" id="cart-count">0 ITEMS</p>
+                <p class="text-lg font-extrabold text-gray-900" id="cart-total">₹0</p>
+            </div>
+            <button onclick="openCheckoutModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2 shadow-md transition-all active:scale-95 text-sm">
+                Place Order <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- TRACKING STATUS OVERLAY -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-end justify-center">
+        <div class="bg-white w-full max-w-md rounded-t-3xl p-6 shadow-2xl transform translate-y-full transition-transform duration-300" id="modal-content">
+            <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
+            
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl mb-3 animate-bounce">
+                    <i class="fa-solid fa-truck-ramp-box"></i>
+                </div>
+                <h3 class="text-xl font-black text-gray-900">Order Confirmed!</h3>
+                <p class="text-sm text-emerald-600 font-semibold mt-1">Arriving in <span id="delivery-timer">9</span> minutes</p>
+            </div>
+
+            <!-- TIMELINE STATUS STEPS -->
+            <div class="space-y-6 relative before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-100 pl-1 mb-8">
+                <div class="flex items-start gap-4 relative">
+                    <div class="w-7 h-7 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">✓</div>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900">Order Received</h4>
+                        <p class="text-xs text-gray-400">Tap 2 Shop Store #42</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 relative">
+                    <div class="w-7 h-7 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold z-10 animate-pulse">
+                        <i class="fa-solid fa-box text-[10px]"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900">Packing your items</h4>
+                        <p class="text-xs text-gray-500">Ensuring freshness and quality</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 relative">
+                    <div class="w-7 h-7 bg-gray-200 text-gray-400 rounded-full flex items-center justify-center text-xs font-bold z-10">3</div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-400">Rider assigning</h4>
+                        <p class="text-xs text-gray-400">Hyper-local delivery partner</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeCheckoutModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3.5 rounded-xl text-sm transition">
+                Back to Shopping
+            </button>
+        </div>
+    </div>
+
+    <!-- CORE APPLICATION JAVASCRIPT ENGINE -->
+    <script>
+        const products = [
+            { id: 1, name: 'Classic Potato Chips', price: 30, category: 'munchies', tag: 'Crispy', eta: '8 mins', img: '🍿' },
+            { id: 2, name: 'Chocolate Cookies', price: 60, category: 'munchies', tag: 'Sweet', eta: '9 mins', img: '🍪' },
+            { id: 3, name: 'Fresh Whole Milk (1L)', price: 65, category: 'dairy', tag: 'Fresh', eta: '7 mins', img: '🥛' },
+            { id: 4, name: 'Energy Drink Can', price: 110, category: 'dairy', tag: 'Chilled', eta: '9 mins', img: '⚡' },
+            { id: 5, name: 'Salted Roasted Cashews', price: 149, category: 'munchies', tag: 'Premium', eta: '10 mins', img: '🥜' },
+            { id: 6, name: 'Fresh Whipping Cream', price: 90, category: 'dairy', tag: 'Dairy', eta: '8 mins', img: '🧁' }
+        ];
+
+        let cart = {};
+
+        function renderProducts(filter = 'all') {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+            
+            filtered.forEach(p => {
+                const qty = cart[p.id] || 0;
+                const card = document.createElement('div');
+                card.className = "border border-gray-100 rounded-2xl p-3 bg-white shadow-sm flex flex-col justify-between hover:border-emerald-200 transition-all";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="w-full h-28 bg-gray-50 rounded-xl flex items-center justify-center text-4xl relative mb-2">
+                            ${p.img}
+                            <span class="absolute top-2 left-2 bg-emerald-50 text-emerald-700 font-bold text-[10px] px-2 py-0.5 rounded-md">${p.tag}</span>
+                            <span class="absolute bottom-2 right-2 text-gray-400 text-[10px]"><i class="fa-solid fa-clock text-amber-500"></i> ${p.eta}</span>
+                        </div>
+                        <h4 class="font-bold text-sm text-gray-900 leading-tight mb-1">${p.name}</h4>
+                    </div>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="font-extrabold text-base text-gray-900">₹${p.price}</span>
+                        ${qty === 0 ? 
+                            `<button onclick="updateQty(${p.id}, 1)" class="border border-emerald-600 text-emerald-600 font-bold text-xs px-4 py-1.5 rounded-lg hover:bg-emerald-50 transition active:scale-95 uppercase tracking-wider">Add</button>` :
+                            `<div class="flex items-center bg-emerald-600 text-white rounded-lg overflow-hidden font-bold text-xs shadow-sm">
+                                <button onclick="updateQty(${p.id}, -1)" class="px-2.5 py-1.5 hover:bg-emerald-700 transition">-</button>
+                                <span class="px-2 py-1.5">${qty}</span>
+                                <button onclick="updateQty(${p.id}, 1)" class="px-2.5 py-1.5 hover:bg-emerald-700 transition">+</button>
+                             </div>`
+                        }
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateQty(id, change) {
+            cart[id] = (cart[id] || 0) + change;
+            if (cart[id] <= 0) delete cart[id];
+            
+            renderProducts(document.querySelector('.cat-btn.bg-emerald-600').id.replace('cat-', ''));
+            updateCartBar();
+        }
+
+        function updateCartBar() {
+            const bar = document.getElementById('cart-bar');
+            let totalItems = 0;
+            let totalPrice = 0;
+
+            for (let id in cart) {
+                const item = products.find(p => p.id == id);
+                totalItems += cart[id];
+                totalPrice += (item.price * cart[id]);
+            }
+
+            if (totalItems > 0) {
+                bar.classList.remove('translate-y-full');
+                document.getElementById('cart-count').innerText = `${totalItems} ITEM${totalItems > 1 ? 'S' : ''}`;
+                document.getElementById('cart-total').innerText = `₹${totalPrice}`;
+            } else {
+                bar.classList.add('translate-y-full');
+            }
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.className = "cat-btn py-2.5 px-3 rounded-xl bg-gray-100 text-gray-600 font-medium text-xs hover:bg-gray-200 transition";
+            });
+            document.getElementById(`cat-${cat}`).className = "cat-btn py-2.5 px-3 rounded-xl bg-emerald-600 text-white font-medium text-xs transition shadow-sm";
+            document.getElementById('grid-title').innerText = cat === 'all' ? 'Fresh Essentials' : cat.charAt(0).toUpperCase() + cat.slice(1);
+            renderProducts(cat);
+        }
+
+        function openCheckoutModal() {
+            const modal = document.getElementById('checkout-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => content.classList.remove('translate-y-full'), 50);
+        }
+
+        function closeCheckoutModal() {
+            const modal = document.getElementById('checkout-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                cart = {};
+                updateCartBar();
+                filterCategory('all');
+            }, 300);
+        }
+
+        // Initialize application layout
+        renderProducts();
+    </script>
+</body>
+</html>
